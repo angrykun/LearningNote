@@ -45,11 +45,120 @@
 
 方法重载指的是在勒种可以定义多个相同名称但方法签名不同的方法，**方法签名不同指的是参数顺序，参数类型，参数个数不同，方法返回类型不属于方法签名的一部分。**
 
-     class Person()
-	 {
-		//打印方法
-		public void Print(string name)
-		{
-			Console.WrteLine(name);
-		}
-	 }
+ 	public class Person
+    {
+        //打印方法
+        public void Print(string name)
+        {
+            //显示传入的值
+            Console.WriteLine("输入值为：" + name);
+        }
+        //不属于方法重载
+        //下面方法会出现编译错误
+        public int Print(string name)
+        {
+            //显示传入的值
+            Console.WriteLine("输入值为：" + name);
+            return 1;
+        }
+        //重载 参数类型不同
+        public void Print(int age)
+        {
+            Console.WriteLine("输入值为：" + age);
+        }
+        //重载 参数个数不同
+        public void Print(string name, int age)
+        {
+            Console.WriteLine("输入值为：Name=" + name + ";Age=" + age);
+        }
+    }
+
+**PS:如果两个方法只有返回值类型不同，这样的方法不能成为方法重载。**
+
+## 4.3.4 构造函数 ##
+构造函数主要用户创建类的实例对象，当调用构造函数创建一个对象时，构造函数会为对象分配内存空间，并初始化类的成员。构造函数分为实例构造函数和静态构造函数。
+
+### 1. 实例构造函数
+实例构造函数用于创建和初始化类的实例， 使用new操作符创建对象的过程，就是调用实例构造函数，来初始化类中所有实例成员。
+
+	构造函数特点：
+	1. 构造函数可以进行方法重载。
+	2. 如果没有显示的指定构造函数，编译器会自动生成一个函数体为空的默认无参构造函数。
+	3. 构造函数可以指定访问级别，即可以使用public，protected,private修饰符来修饰。
+	4. 构造函数必须与类同名
+	5. 构造函数不能有返回值类型
+
+### 2. 静态构造函数
+静态构造函数用于初始化类中的静态成员，在创建第一个实例或引用任何静态成员之前，CLR都将自动的调用静态构造函数。
+
+    public class Person
+    {
+        private static string name;
+        private string desc;
+        //静态构造函数无法使用修饰符
+        //静态构造函数只能初始化静态变量
+        static Person()
+        {
+            name = "hello";
+			//此处无法初始化 desc变量
+        }
+    }
+	
+    静态构造函数特点
+	1. 静态构造函数无法使用修饰符
+	2. 静态构造函数不能带有任何参数
+	3. 静态构造函数只会执行一次
+	4. 不能直接调用静态构造函数
+	
+## 4.3.5 析构函数 ##
+析构函数用于在**类销毁之前释放实例所有的托管和非托管资源**。C#应用程序所创建的大多数对象，可以依靠.NET Framework 的垃圾回收器(GC)来隐式的执行内存管理工作，但是若创建了非托管资源对象，在应用程序使用完这些非托管对象后，垃圾回收器将运行对象的析构函数(Finalize方法)来释放这些资源。
+
+    public class Person
+    {
+		//析构函数
+        ~Person()
+        {
+            Console.WriteLine("析构函数被调用");
+        }
+    }
+该函数隐式的调用了Object的Finalize方法：
+
+		protected override void Finalize()
+        {
+            try
+            {
+                Console.WriteLine("析构函数被调用");
+            }
+            finally
+            {
+                //调用Object.Finalize
+            }
+        }
+
+**PS：编译器不推荐重写Finalize方法，而是提供一个析构函数，析构函数有垃圾回收器自动调用。**
+
+## 4.3.6 索引器 ##
+索引器将简化对类中数组成员的访问。索引器的定义如下：
+![](http://i.imgur.com/qlouqzy.png)
+
+    public class Person
+    {
+        private int[] intarray = new int[10];
+        //索引起定义
+        public int this[int index]
+        {
+            get
+            {
+                return intarray[index];
+            }
+            set
+            {
+                intarray[index] = value;
+            }
+        }
+    }
+	//使用索引器
+    Person person = new Person();
+    person[0] = 1;
+    person[1] = 2;
+    Console.WriteLine(person[1]);
