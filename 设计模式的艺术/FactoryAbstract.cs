@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Test.DesignPattern.FactoryAbstract
 {
     #region 抽象工厂
