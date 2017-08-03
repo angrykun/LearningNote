@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 /// <summary>
 /// 简单工厂
 /// </summary>
